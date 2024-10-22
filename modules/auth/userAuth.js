@@ -19,27 +19,23 @@ exports.loginUser = async (req, res) => {
             return res.status(401).json({ message: 'Invalid username or password' });
         }
 
-        // Compare password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ message: 'Invalid username or password' });
         }
 
-        // Generate access token
         const accessToken = jwt.sign(
             { id: user._id, username: user.username },
             process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: '15m' } // Token expires in 15 minutes
+            { expiresIn: '7d' } 
         );
 
-        // Generate refresh token
         const refreshToken = jwt.sign(
             { id: user._id },
             process.env.REFRESH_TOKEN_SECRET,
-            { expiresIn: '7d' } // Refresh token expires in 7 days
+            { expiresIn: '7d' } 
         );
 
-        // Send tokens in the response
         res.json({ accessToken, refreshToken });
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
