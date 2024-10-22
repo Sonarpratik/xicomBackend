@@ -6,17 +6,18 @@ const {
     updateUserRole,
     deleteUserRole,
 } = require('./userRoleController');
+const permissionMiddleware = require('../../middlewares/permissionsMiddleware');
 
 const router = express.Router();
 
-router.post('/', createUserRole);
+router.post('/', permissionMiddleware('USER-ROLE', 'write'), createUserRole);
 
-router.get('/', getAllUserRoles);
+router.get('/', permissionMiddleware('USER-ROLE', 'read'), getAllUserRoles);
 
-router.get('/:id', getUserRoleById);
+router.get('/:id', permissionMiddleware('USER-ROLE', 'read'), getUserRoleById);
 
-router.put('/:id', updateUserRole);
+router.put('/:id', permissionMiddleware('USER-ROLE', 'update'), updateUserRole);
 
-router.delete('/:id', deleteUserRole);
+router.delete('/:id', permissionMiddleware('USER-ROLE', 'delete'), deleteUserRole);
 
 module.exports = router;
