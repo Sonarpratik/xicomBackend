@@ -41,3 +41,27 @@ exports.loginUser = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+exports.verifyToken = async (req, res) => {
+    const token = req.headers['authorization']?.split(' ')[1]; // Get token from Authorization header
+
+    if (!token) {
+        return res.status(401).json({ message: 'Token is required' });
+    }
+
+    try {
+        // Verify token
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+        // Fetch user details from the database using decoded id
+        const user = await User.findById(decoded.id).select('-password').populate('role'); // Populate role details if needed
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(401).json({ message: 'Invalid token' });
+    }
+};
