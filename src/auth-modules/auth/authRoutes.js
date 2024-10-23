@@ -7,7 +7,7 @@ const { body } = require('express-validator');
 
 const router = express.Router();
 
-router.post('/login', 
+router.post('/auth/login', 
     [
         body('username').notEmpty().withMessage('Valid username is required'),
         body('password').notEmpty().withMessage('Password is required'),

@@ -1,5 +1,5 @@
-const connectDB = require('./config/db');
-const server = require('./config/server'); // Import the server setup
+const connectDB = require('./src/config/db');
+const server = require('./src/config/server'); // Import the server setup
 
 require('dotenv').config();
 
