@@ -15,6 +15,6 @@ router.post('/auth/login',
     loginUser
 );
 
-router.get('/verify', verifyToken);
+router.get('/auth/verify', verifyToken);
 
 module.exports = router;

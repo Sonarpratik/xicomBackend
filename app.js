@@ -1,3 +1,4 @@
+//app.js
 const connectDB = require('./src/config/db');
 const server = require('./src/config/server'); // Import the server setup
 
