@@ -4,9 +4,11 @@ const userRoutes = require('../auth-modules/user/userRoutes');
 const authRoutes = require('../auth-modules/auth/authRoutes');
 const userRoleRoutes = require('../auth-modules/user-role/userRoleRoutes');
 const productRoutes = require('../auth-modules/product/productRoutes');
+const setupCors = require('./corsSetup');
 
 const app = express();
 
+app.use(setupCors());
 app.use(express.json());
 
 app.use((req, res, next) => {
