@@ -12,6 +12,7 @@ const authGuard = (req, res, next) => {
     try {
         // Verify the token
         const verified = jwt.verify(token.split(" ")[1], process.env.ACCESS_TOKEN_SECRET);
+        
         req.user = verified; // Attach the decoded token data to the request object
         next(); // Move to the next middleware or route handler
     } catch (error) {

@@ -31,6 +31,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['Client', 'System'],
         required: true,
+        default: 'Client',  // Default user type is 'Client'
     },
 }, {
     timestamps: true, 
