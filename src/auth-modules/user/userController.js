@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const { validationResult } = require('express-validator');
 
 exports.registerUser = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, email, password, address, phone, role, userType } = req.body;
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -12,18 +12,30 @@ exports.registerUser = async (req, res) => {
     }
 
     try {
-        // Use userService to check for existing user
+        // Check if the user already exists
         const existingUser = await userService.findUserByEmail(email);
         if (existingUser) {
             return res.status(400).json({ message: 'Email already exists' });
         }
 
+        // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new User({ username, email, password: hashedPassword });
+
+        // Create new user with all fields
+        const user = new User({
+            username,
+            email,
+            password: hashedPassword,
+            address,
+            phone,
+            role,
+            userType: userType || 'Client'  // Default to 'Client' if userType is not provided
+        });
+
         await user.save();
-        res.status(201).json({ message: 'User registered successfully' });
+        res.status(201).json({ message: 'User registered successfully', user });
     } catch (error) {
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ message: 'Server error', error });
     }
 };
 

@@ -10,8 +10,11 @@ exports.findUserByUsername = async (username) => {
     return await User.findOne({ username }).populate('role');
 };
 
+// exports.getAllUsers = async () => {
+//     return await User.find({}, '-password').populate('role');
+// };
 exports.getAllUsers = async () => {
-    return await User.find({}, '-password').populate('role');
+    return await User.find({}, '-password').populate('role'); // Include all fields including password
 };
 
 exports.findUserById = async (id) => {
