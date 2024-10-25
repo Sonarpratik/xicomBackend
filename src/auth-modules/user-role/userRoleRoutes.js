@@ -10,14 +10,14 @@ const permissionMiddleware = require('../../middlewares/permissionsMiddleware');
 
 const router = express.Router();
 
-router.post('/', permissionMiddleware('USER-ROLE', 'write'), createUserRole);
+router.post('/', createUserRole);
 
-router.get('/', permissionMiddleware('USER-ROLE', 'read'), getAllUserRoles);
+router.get('/', getAllUserRoles);
 
-router.get('/:id', permissionMiddleware('USER-ROLE', 'read'), getUserRoleById);
+router.get('/:id', getUserRoleById);
 
-router.put('/:id', permissionMiddleware('USER-ROLE', 'update'), updateUserRole);
+router.put('/:id', updateUserRole);
 
-router.delete('/:id', permissionMiddleware('USER-ROLE', 'delete'), deleteUserRole);
+router.delete('/:id', deleteUserRole);
 
 module.exports = router;

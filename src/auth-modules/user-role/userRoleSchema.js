@@ -37,7 +37,7 @@ const UserRoleSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        enum: Object.values(ModelName), 
+        // enum: Object.values(ModelName), 
     },
     permissions: {
         type: [PermissionsSchema], 
