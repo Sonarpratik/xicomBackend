@@ -41,12 +41,16 @@ exports.registerUser = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
     try {
-        const users = await userService.getAllUsers();
+        const { search, role, userType } = req.query;
+        const filters = { search, role, userType };
+
+        const users = await userService.getAllUsers(filters);
         res.status(200).json(users);
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
 
 exports.getUserById = async (req, res) => {
     const { id } = req.params;

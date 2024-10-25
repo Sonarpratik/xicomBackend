@@ -10,11 +10,25 @@ exports.findUserByUsername = async (username) => {
     return await User.findOne({ username }).populate('role');
 };
 
-// exports.getAllUsers = async () => {
-//     return await User.find({}, '-password').populate('role');
-// };
-exports.getAllUsers = async () => {
-    return await User.find({}, '-password').populate('role'); // Include all fields including password
+exports.getAllUsers = async (filters) => {
+    const query = {};
+
+    if (filters.search) {
+        query.$or = [
+            { username: new RegExp(filters.search, 'i') },
+            { email: new RegExp(filters.search, 'i') }
+        ];
+    }
+
+    if (filters.role) {
+        query.role = filters.role;
+    }
+
+    if (filters.userType) {
+        query.userType = filters.userType;
+    }
+
+    return await User.find(query, '-password').populate('role');
 };
 
 exports.findUserById = async (id) => {
