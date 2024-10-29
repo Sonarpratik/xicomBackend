@@ -6,8 +6,8 @@ exports.findUserByEmail = async (email) => {
     return await User.findOne({ email });
 };
 
-exports.findUserByUsername = async (username) => {
-    return await User.findOne({ username }).populate('role');
+exports.findUserByEmail = async (email) => {
+    return await User.findOne({ email }).populate('role');
 };
 
 // exports.getAllUsers = async () => {

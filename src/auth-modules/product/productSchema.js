@@ -22,9 +22,9 @@ const ProductSchema = new mongoose.Schema(
     multi_img: [{ type: String }],
     seoArray: [{ type: String }],
 
-    material: { type: String },
+    material: { type: String,lowercase: true },
 
-    size: [{ type: String }],
+    size: { type: String,lowercase: true },
     description: { type: String },
 
     price: { type: Number, required: true, set: (v) => Math.ceil(v) },

@@ -7,7 +7,22 @@ exports.createProduct = async (data) => {
 };
 
 exports.getAllProducts = async () => {
-    return await Product.find({active: true});
+    
+    try {
+        const products = await Product.aggregate([
+          { $match: { active: true } },        // Filter only active products
+          { $group: {                           // Group by the `name` field
+              _id: "$name",
+              doc: { $first: "$$ROOT" }         // Use `$first` to get the first occurrence
+            }
+          },
+          { $replaceRoot: { newRoot: "$doc" } } // Replace the root to simplify the output
+        ]);
+    
+        return products;
+      } catch (error) {
+        console.error("Error fetching unique active products:", error);
+      }
 };
 exports.getAllProductsAdmin = async () => {
     return await Product.find();

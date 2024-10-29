@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const { validationResult } = require('express-validator');
 
 exports.registerUser = async (req, res) => {
-    const { username, email, password, address, phone, role, userType } = req.body;
+    const {  email, password,...data} = req.body;
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -22,15 +22,7 @@ exports.registerUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Create new user with all fields
-        const user = new User({
-            username,
-            email,
-            password: hashedPassword,
-            address,
-            phone,
-            role,
-            userType: userType || 'Client'  // Default to 'Client' if userType is not provided
-        });
+        const user = new User({email:email,password:hashedPassword,...data});
 
         await user.save();
         res.status(201).json({ message: 'User registered successfully', user });

@@ -1,7 +1,8 @@
 const express = require('express');
 const { 
     loginUser,
-    verifyToken
+    verifyToken,
+    googleLoginUser
 } = require('./userAuth');
 const { body } = require('express-validator');
 
@@ -9,10 +10,16 @@ const router = express.Router();
 
 router.post('/auth/login', 
     [
-        body('username').notEmpty().withMessage('Valid username is required'),
+        body('email').notEmpty().withMessage('Valid email is required'),
         body('password').notEmpty().withMessage('Password is required'),
     ], 
     loginUser
+);
+router.post('/auth/google/login', 
+    [
+        body('Gtoken').notEmpty().withMessage('Valid Gtoken is required'),
+    ], 
+    googleLoginUser
 );
 
 router.get('/auth/verify', verifyToken);

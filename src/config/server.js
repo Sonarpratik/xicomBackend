@@ -13,7 +13,7 @@ app.use(setupCors());
 app.use(express.json());
 
 app.use((req, res, next) => {
-  const publicRoutes = ['/auth/login', '/api/users/register','/api/product',];
+  const publicRoutes = ['/auth/login','/auth/google/login', '/api/users/register','/api/product',];
 
   if (publicRoutes.includes(req.path)) {
   // if (true) {
