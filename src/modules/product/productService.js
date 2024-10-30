@@ -3,8 +3,11 @@ const { getProduct } = require('./utils/helper');
 
 exports.createProduct = async (data) => {
     const product = new Product(data);
-    return await product.save();
-};
+    
+ 
+      return await product.save();
+  
+  };
 
 exports.getAllProducts = async ({query}) => {
     
@@ -12,7 +15,11 @@ exports.getAllProducts = async ({query}) => {
         const products = await Product.aggregate([
           { $match: { active: true ,...query} },        // Filter only active products
           { $group: {                           // Group by the `name` field
-              _id: "$name",
+            _id: { 
+                name: "$name",       // Group by `name`
+                category: "$category",// Group by `category`
+                material: "$material" // Group by `category`
+            },
               doc: { $first: "$$ROOT" }         // Use `$first` to get the first occurrence
             }
           },
@@ -30,8 +37,8 @@ exports.getAllProductsAdmin = async () => {
 
 exports.getProductById = async (id) => {
 
-    const data = await Product.findById(id);
-    const products = await Product.find({ name: data.name ,active:true});
+    const data = await Product.findById(id).populate('category');
+    const products = await Product.find({ name: data.name,material:data.material,category:data?.category?._id.toString(),active:true});
     
     const result = getProduct(data, products);
     return await result;

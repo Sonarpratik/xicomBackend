@@ -16,7 +16,6 @@ const userCartSchema = new mongoose.Schema({
     required: true,
   },
   quantity: { type: Number, default: 1 },
-  size: { type: String, required: true },
 });
 
 const userCart = mongoose.model("CART", userCartSchema);

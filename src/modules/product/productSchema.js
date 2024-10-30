@@ -1,14 +1,20 @@
 const mongoose = require("mongoose");
+const Category = require("../category/categorySchema");
 
 const ProductSchema = new mongoose.Schema(
   {
     name: { type: String, required: true,lowercase: true },
     type: { type: String, lowercase: true ,required: true},
-    category: { type: String, required: true ,lowercase: true},
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: Category,
+      required: true,
+    },
     material: { type: String,lowercase: true,required: true },
     
     color: { type: String ,lowercase: true},
     size: { type: String,lowercase: true },
+    
 
     brand: { type: String, lowercase: true },
     special: { type: Boolean, default: false },
@@ -43,7 +49,7 @@ const ProductSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
+ProductSchema.index({ name: 1, category: 1, material: 1, color: 1, size: 1 }, { unique: true });
 const Product = mongoose.model("Product", ProductSchema);
 
 module.exports = Product;

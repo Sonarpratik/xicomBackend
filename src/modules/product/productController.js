@@ -1,12 +1,22 @@
 const productService = require('./productService');
 
 exports.createProduct = async (req, res) => {
+
+
     try {
         const product = await productService.createProduct(req.body);
         res.status(201).json(product);
     } catch (error) {
-        console.log(error)
-        res.status(500).json({ message: 'Server error', error });
+        if (error.code === 11000) { // Duplicate key error code
+            return res.status(400).json({
+                message: 'A category with the same name already exists.',
+                details: error.keyValue // This will show the duplicate fields
+            });
+        }
+        // Handle other errors
+        console.error('Error creating category:', error); // Log the error for debugging
+        res.status(500).json({ message: 'An unexpected error occurred.', error });
+
     }
 };
 

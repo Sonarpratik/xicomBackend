@@ -5,6 +5,7 @@ const authRoutes = require('../auth-modules/auth/authRoutes');
 const userRoleRoutes = require('../auth-modules/user-role/userRoleRoutes');
 const productRoutes = require('../modules/product/productRoutes');
 const cartRoutes = require('../modules/cart/cartRoutes');
+const categoryRoutes = require('../modules/category/categoryRoutes');
 const setupCors = require('./corsSetup');
 
 const app = express();
@@ -28,5 +29,6 @@ app.use('', authRoutes);
 app.use('/api/user-role', userRoleRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/category', categoryRoutes);
 
 module.exports = app;
