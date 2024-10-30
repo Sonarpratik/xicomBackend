@@ -18,7 +18,7 @@ exports.getAllProducts = async (req, res) => {
 
             products = await productService.getAllProductsAdmin();
         }else{
-            products = await productService.getAllProducts();
+            products = await productService.getAllProducts({query:req.query});
 
         }
       

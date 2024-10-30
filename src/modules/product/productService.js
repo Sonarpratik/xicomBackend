@@ -6,11 +6,11 @@ exports.createProduct = async (data) => {
     return await product.save();
 };
 
-exports.getAllProducts = async () => {
+exports.getAllProducts = async ({query}) => {
     
     try {
         const products = await Product.aggregate([
-          { $match: { active: true } },        // Filter only active products
+          { $match: { active: true ,...query} },        // Filter only active products
           { $group: {                           // Group by the `name` field
               _id: "$name",
               doc: { $first: "$$ROOT" }         // Use `$first` to get the first occurrence

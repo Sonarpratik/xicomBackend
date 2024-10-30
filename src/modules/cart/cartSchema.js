@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const User = require("../user/userSchema");
+const User = require("../../auth-modules/user/userSchema");
 const Product = require("../product/productSchema");
 
 const userCartSchema = new mongoose.Schema({

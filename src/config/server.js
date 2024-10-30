@@ -3,8 +3,8 @@ const authGuard = require('../middlewares/authMiddleware');
 const userRoutes = require('../auth-modules/user/userRoutes');
 const authRoutes = require('../auth-modules/auth/authRoutes');
 const userRoleRoutes = require('../auth-modules/user-role/userRoleRoutes');
-const productRoutes = require('../auth-modules/product/productRoutes');
-const cartRoutes = require('../auth-modules/cart/cartRoutes');
+const productRoutes = require('../modules/product/productRoutes');
+const cartRoutes = require('../modules/cart/cartRoutes');
 const setupCors = require('./corsSetup');
 
 const app = express();

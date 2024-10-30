@@ -3,8 +3,14 @@ const mongoose = require("mongoose");
 const ProductSchema = new mongoose.Schema(
   {
     name: { type: String, required: true,lowercase: true },
-    category: { type: String, required: true },
+    type: { type: String, lowercase: true ,required: true},
+    category: { type: String, required: true ,lowercase: true},
+    material: { type: String,lowercase: true,required: true },
+    
+    color: { type: String ,lowercase: true},
+    size: { type: String,lowercase: true },
 
+    brand: { type: String, lowercase: true },
     special: { type: Boolean, default: false },
     trending: { type: Boolean, default: false },
 
@@ -12,7 +18,6 @@ const ProductSchema = new mongoose.Schema(
     instock: { type: Boolean, default: true },
     active: { type: Boolean, default: true },
 
-    color: { type: String ,lowercase: true},
 
     image: {
       type: String,
@@ -22,9 +27,7 @@ const ProductSchema = new mongoose.Schema(
     multi_img: [{ type: String }],
     seoArray: [{ type: String }],
 
-    material: { type: String,lowercase: true },
 
-    size: { type: String,lowercase: true },
     description: { type: String },
 
     price: { type: Number, required: true, set: (v) => Math.ceil(v) },
