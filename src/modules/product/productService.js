@@ -2,10 +2,16 @@ const Product = require('./productSchema');
 const { getProduct } = require('./utils/helper');
 
 exports.createProduct = async (data) => {
-    const product = new Product(data);
-    
- 
-      return await product.save();
+  const existProduct = await Product.findOne({category: data?.category,material: data?.material,color: data?.color,size: data?.size,type: data?.type,name: data?.name});
+if(!existProduct){
+
+  const product = new Product(data);
+  
+  
+  return await product.save();
+}else{
+  return "Product is already created"
+}
   
   };
 
@@ -38,7 +44,7 @@ exports.getAllProductsAdmin = async () => {
 exports.getProductById = async (id) => {
 
     const data = await Product.findById(id).populate('category');
-    const products = await Product.find({ name: data.name,material:data.material,category:data?.category?._id.toString(),active:true});
+    const products = await Product.find({ name: data?.name,material:data?.material,category:data?.category?._id.toString(),active:true});
     
     const result = getProduct(data, products);
     return await result;
