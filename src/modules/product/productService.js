@@ -12,29 +12,69 @@ exports.createProduct = async (data) => {
   
   };
 
-exports.getAllProducts = async ({query}) => {
-    
+  exports.getAllProducts = async ({ query }) => {
     try {
-        const products = await Product.aggregate([
-          { $match: { active: true ,...query} },        // Filter only active products
-          { $group: {                           // Group by the `name` field
+      // Destructure and set default values for page and limit
+      const { page = 1, limit = 12 ,...filter} = query;
+      
+      // Parse page and limit as integers
+      const pageNum = parseInt(page);
+      const limitNum = parseInt(limit);
+      const skip = (pageNum - 1) * limitNum; // Calculate skip value for pagination
+      
+      console.log("Query parameters:", filter); // Debugging: log query parameters
+  
+      const products = await Product.aggregate([
+        { 
+          $match: { 
+            active: true,                        
+            ...filter                              // Additional filters
+          }
+        },
+        { 
+          $group: {                               
             _id: { 
-                name: "$name",       // Group by `name`
-                category: "$category",// Group by `category`
-                material: "$material", // Group by `category`
-                mainCategory: "$mainCategory" // Group by `category`
+              name: "$name",
+              category: "$category",
+              material: "$material",
+              mainCategory: "$mainCategory"
             },
-              doc: { $first: "$$ROOT" }         // Use `$first` to get the first occurrence
-            }
-          },
-          { $replaceRoot: { newRoot: "$doc" } } // Replace the root to simplify the output
-        ]);
-    
-        return products;
-      } catch (error) {
-        console.error("Error fetching unique active products:", error);
-      }
-};
+            doc: { $first: "$$ROOT" }             
+          }
+        },
+        { 
+          $replaceRoot: { newRoot: "$doc" }       
+        },
+        {
+          $facet: {
+            paginatedResults: [
+              { $skip: skip },                   
+              { $limit: limitNum }               
+            ],
+            totalCount: [
+              { $count: "count" }                
+            ]
+          }
+        }
+      ]);
+  
+      const paginatedResults = products[0]?.paginatedResults || [];
+      const totalCount = products[0]?.totalCount[0]?.count || 0;
+  
+      return {
+        products: paginatedResults,
+        totalCount,
+        page: pageNum,
+        limit: limitNum
+      };
+    } catch (error) {
+      console.error("Error fetching paginated active products with total count:", error);
+      throw error;
+    }
+  };
+  
+  
+  
 exports.getAllProductsAdmin = async () => {
     return await Product.find().populate('category');
 };
