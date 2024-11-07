@@ -15,7 +15,9 @@ exports.createProduct = async (req, res) => {
         }
         // Handle other errors
         console.error('Error creating category:', error); // Log the error for debugging
-        res.status(500).json({ message: 'An unexpected error occurred.', error });
+        res.status(500).json({
+            message: error.message || error,
+        });
 
     }
 };
@@ -50,6 +52,7 @@ exports.getAllProductsAdmin = async (req, res) => {
 
 exports.getProductById = async (req, res) => {
     try {
+        console.log('getProduct')
         let product={}
         if(req.user?.userType==="System"){
 
@@ -63,7 +66,28 @@ exports.getProductById = async (req, res) => {
         }
         res.status(200).json(product);
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        console.log(error)
+        res.status(500).json( error );
+    }
+};
+exports.getProductByIdAdmin = async (req, res) => {
+    try {
+        console.log('getProduct')
+        let product={}
+        if(req.user?.userType==="System"){
+
+            product = await productService.getProductByIdAdmin(req.params.id);
+        }else{
+            product = await productService.getProductById(req.params.id);
+
+        }
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+        res.status(200).json(product);
+    } catch (error) {
+        console.log(error)
+        res.status(500).json( error );
     }
 };
 

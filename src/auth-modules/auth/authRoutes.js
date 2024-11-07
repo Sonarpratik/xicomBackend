@@ -2,7 +2,8 @@ const express = require('express');
 const { 
     loginUser,
     verifyToken,
-    googleLoginUser
+    googleLoginUser,
+    loginAdmin
 } = require('./userAuth');
 const { body } = require('express-validator');
 
@@ -14,6 +15,13 @@ router.post('/auth/login',
         body('password').notEmpty().withMessage('Password is required'),
     ], 
     loginUser
+);
+router.post('/auth/admin/login', 
+    [
+        body('email').notEmpty().withMessage('Valid email is required'),
+        body('password').notEmpty().withMessage('Password is required'),
+    ], 
+    loginAdmin
 );
 router.post('/auth/google/login', 
     [

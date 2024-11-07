@@ -6,6 +6,7 @@ const {
     updateProduct,
     deleteProduct,
     getAllProductsAdmin,
+    getProductByIdAdmin,
 } = require('./productController');
 const permissionMiddleware = require('../../middlewares/permissionsMiddleware');
 
@@ -17,6 +18,7 @@ router.get('/', getAllProducts);
 router.get('/admin/', getAllProductsAdmin);
 
 router.get('/:id',  getProductById);
+router.get('/admin/:id',  getProductByIdAdmin);
 
 router.put('/:id',  updateProduct);
 

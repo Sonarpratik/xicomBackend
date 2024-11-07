@@ -2,16 +2,13 @@ const Product = require('./productSchema');
 const { getProduct } = require('./utils/helper');
 
 exports.createProduct = async (data) => {
-  const existProduct = await Product.findOne({category: data?.category,material: data?.material,color: data?.color,size: data?.size,type: data?.type,name: data?.name});
-if(!existProduct){
+
 
   const product = new Product(data);
   
   
   return await product.save();
-}else{
-  return "Product is already created"
-}
+
   
   };
 
@@ -24,7 +21,8 @@ exports.getAllProducts = async ({query}) => {
             _id: { 
                 name: "$name",       // Group by `name`
                 category: "$category",// Group by `category`
-                material: "$material" // Group by `category`
+                material: "$material", // Group by `category`
+                mainCategory: "$mainCategory" // Group by `category`
             },
               doc: { $first: "$$ROOT" }         // Use `$first` to get the first occurrence
             }
@@ -38,16 +36,24 @@ exports.getAllProducts = async ({query}) => {
       }
 };
 exports.getAllProductsAdmin = async () => {
-    return await Product.find();
+    return await Product.find().populate('category');
 };
 
 exports.getProductById = async (id) => {
 
-    const data = await Product.findById(id).populate('category');
+  const data = await Product.findById(id)
+  .populate('category', 'name _id type'); // Only select name, _id, and type from the category
+
     const products = await Product.find({ name: data?.name,material:data?.material,category:data?.category?._id.toString(),active:true});
-    
-    const result = getProduct(data, products);
-    return await result;
+    const struct=await {
+      originalColor:data.color,
+      ...data.toObject()
+    }
+
+    console.log(data)
+    console.log(struct);
+    const result = getProduct(struct, products);
+    return await {products:[...products],colors:{...result}};
 };
 exports.getProductByIdAdmin = async (id) => {
 

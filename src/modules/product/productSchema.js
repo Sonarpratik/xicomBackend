@@ -1,30 +1,30 @@
 const mongoose = require("mongoose");
-const Category = require("../category/categorySchema");
+const Category = require("../category/categorySchema"); // Assuming this is your Category model
 
+// Define the Product Schema
 const ProductSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true,lowercase: true },
-    type: { type: String, lowercase: true ,required: true},
+    name: { type: String, required: true, lowercase: true },
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: Category,
       required: true,
     },
-    material: { type: String,lowercase: true,required: true },
-    
-    color: { type: String ,lowercase: true},
-    size: { type: String,lowercase: true },
-    
+    material: { type: String,  required: true },
+    mainCategory: { type: String,  required: true },
 
+    type: { type: String,  required: true },
+
+    color: { type: String, },
+    size: { type: String,  },
     brand: { type: String, lowercase: true },
+    piping: { type: String, lowercase: true },
+    closure: { type: String, lowercase: true },
     special: { type: Boolean, default: false },
     trending: { type: Boolean, default: false },
-
-    inventoryCount: { type: Number, default: true },
+    inventoryCount: { type: Number, default: 0 },
     instock: { type: Boolean, default: true },
     active: { type: Boolean, default: true },
-
-
     image: {
       type: String,
       default:
@@ -32,10 +32,7 @@ const ProductSchema = new mongoose.Schema(
     },
     multi_img: [{ type: String }],
     seoArray: [{ type: String }],
-
-
     description: { type: String },
-
     price: { type: Number, required: true, set: (v) => Math.ceil(v) },
     discount: { type: Number, default: 0, set: (v) => Math.ceil(v) },
     moreFeatures: [
@@ -46,10 +43,42 @@ const ProductSchema = new mongoose.Schema(
     ],
   },
   {
-    timestamps: true,
+    timestamps: true, // Enables createdAt and updatedAt timestamps
   }
 );
-ProductSchema.index({ name: 1, category: 1, material: 1, color: 1, size: 1 }, { unique: true });
+
+// `pre-save` hook to prevent duplicate products with the same name, category, material, color, and size
+ProductSchema.pre("save", async function (next) {
+  try {
+    const product = this;
+    // If the product is new, we proceed with checking
+    if (product.isNew) {
+      // Query for existing products with the same combination of fields
+      const existingProduct = await mongoose.models.Product.findOne({
+        name: product.name,
+        category: product.category,
+        material: product.material,
+        color: product.color,
+        size: product.size,
+      });
+
+      if (existingProduct) {
+    
+          return next(new Error("A product with the same combination already exists."));
+        
+      }
+    }
+
+    // Continue saving the product if no duplicates found
+    next();
+  } catch (error) {
+    console.error("Error in pre-save hook:", error);
+    return next(error); // Pass the error to the next handler
+  }
+});
+
+// Create the model based on the schema
 const Product = mongoose.model("Product", ProductSchema);
 
+// Export the model
 module.exports = Product;

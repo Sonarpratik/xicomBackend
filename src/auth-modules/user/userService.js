@@ -32,7 +32,7 @@ exports.getAllUsers = async (filters) => {
 };
 
 exports.findUserById = async (id) => {
-    return await User.findById(id).select('-password').populate('role'); // Exclude password from the result
+    return await User.findById(id).select('-password'); // Exclude password from the result
 };
 
 exports.updateUser = async (id, updateData) => {

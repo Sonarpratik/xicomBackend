@@ -16,6 +16,13 @@ const userCartSchema = new mongoose.Schema({
     required: true,
   },
   quantity: { type: Number, default: 1 },
+  custom: {
+    text: { type: String },
+    font: { type: String },
+    color: { type: String },
+    patch: { type: String },
+    price: { type: Number },
+  },
 });
 
 const userCart = mongoose.model("CART", userCartSchema);

@@ -14,11 +14,21 @@ app.use(setupCors());
 app.use(express.json());
 
 app.use((req, res, next) => {
-  const publicRoutes = ['/auth/login','/auth/google/login', '/api/users/register','/api/product',];
+  const publicRoutes = ['/auth/login','/auth/admin/login','/auth/google/login', '/api/users/register','/api/product','/api/product/'];
 
-  if (publicRoutes.includes(req.path)) {
-  // if (true) {
-    return next(); 
+  const isPublicRoute = (path) => {
+    // Check for exact matches first
+    if (publicRoutes.includes(path)) {
+      return true;
+    }
+    
+    // Check for routes with dynamic parameters (e.g., /api/product/:id)
+    const dynamicRouteRegex = /^\/api\/product\/[^\/]+$/;  // Matches /api/product/anything
+    return dynamicRouteRegex.test(path);
+  };
+  
+  if (isPublicRoute(req.path)) {
+    return next(); // Continue to the next middleware
   }
 
   authGuard(req, res, next);
